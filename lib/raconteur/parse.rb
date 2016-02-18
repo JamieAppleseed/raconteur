@@ -82,7 +82,7 @@ class Raconteur::Parse
     #       a) 1+ non-white-space characters, or
     #       b) a string wrapped by the 'quote' character at both ends
     # (instances of the 'quote' character within the string can be escaped by a backward-slash '\')
-    regex = /([^\s]+)\=(#{quote}.*?[^\\]#{quote}|[^\s]+)/mi
+    regex = /([^\s#{quote}]+)\=(#{quote}.*?[^\\]#{quote}|[^\s]+)/mi
     # prepare a fresh hash for the parsed settings
     parsed_settings = {}
     # loop over all key-value setting pairs in the string

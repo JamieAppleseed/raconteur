@@ -14,6 +14,14 @@ class RaconteurParsingTest < Minitest::Test
     assert_equal output, "Within the world of <span class=\"definition\">UXD<span class=\"icon\">(?)</span> <span class=\"description\">User Experience Design (aka UXD + UED + XD) and refers to the process of \"enhancing\" user satisfaction by improving the usability, accessibility, and pleasure provided in the interaction between the user and the product.</span></span>, you really have to consider the user."
   end
 
+  def test_settings_parsing
+    @raconteur.processors.register!("graphic", {
+      template: '<div class="graphic"><div class="visual"><img src="{{ url }}"></div><p class="caption">{{ caption }}</p></div>'
+      })
+    output = @raconteur.parse("{{ graphic: caption=\"Baymard's office in Copenhagen, Denmark\" + url=\"https://maps.googleapis.com/maps/api/staticmap?center=55.672833,12.551455&zoom=15&markers=55.672833,12.551455&size=504x260&sensor=false\" }}")
+    assert_equal output, "<div class=\"graphic\"><div class=\"visual\"><img src=\"https://maps.googleapis.com/maps/api/staticmap?center=55.672833,12.551455&zoom=15&markers=55.672833,12.551455&size=504x260&sensor=false\"></div><p class=\"caption\">Baymard's office in Copenhagen, Denmark</p></div>"
+  end
+
   def test_custom_quote_character
     @raconteur.processors.register!("definition", {
       template: '<span class="definition">{{ term }}<span class="icon">(?)</span> <span class="description">{{ text }}</span></span>'

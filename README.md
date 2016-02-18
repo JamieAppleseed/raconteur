@@ -28,7 +28,7 @@ Raconteur is based around the notion of processors. Each processor has a tag-nam
 # Here's what some of our customers are saying:
 # <div class="quote" id="customer-quote-43">'The most amazing usability report I have ever read!' - James Newman</div>
 # <div class="quote" id="customer-quote-266">'I cannot believe how incredible the benchmark database is!' - Jane Newton</div>
-# <div class="quote" id="customer-quote-7">'Spetacular customer service.' - John Oldling</div>
+# <div class="quote" id="customer-quote-7">'Spectacular customer service.' - John Oldling</div>
 ```
 
 Here's what's happening in the above example:
@@ -87,7 +87,7 @@ Let's take a look at tags:
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/raconteur.
+Bug reports and pull requests are welcome on GitHub at https://github.com/JamieAppleseed/raconteur.
 
 ## License
 
