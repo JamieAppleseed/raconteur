@@ -3,11 +3,11 @@ class Raconteur::Processor
     tag: nil,
     template: nil,
     handler: nil,
-    settings: {}
+    payload: nil
   }.freeze
   ATTRS = DEFAULTS.keys.freeze
 
-  # register new processor by providing a tag name + any settings (optional)
+  # register new processor by providing a tag name + any payload (optional)
   def self.register!(tag, customizations={})
     if find(tag)
       raise 'Processor already exists!'
@@ -74,6 +74,7 @@ class Raconteur::Processor
     @processor.tag = tag
     @processor.template = customizations[:template] if customizations[:template].is_a?(String)
     @processor.handler = customizations[:handler] if customizations[:handler].is_a?(Proc)
+    @processor.payload = customizations[:payload] if customizations.has_key?(:payload)
     @processor
   end
 

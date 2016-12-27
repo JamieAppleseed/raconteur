@@ -18,11 +18,12 @@ class RaconteurProcessorsTest < Minitest::Test
 
   def test_updating_of_processors
     @original.processors.register!("image").register!("footnote")
-    assert_equal @original.processors.find("image").settings, @original.processors.find("footnote").settings
-    @original.processors.find("image").settings[:some_key] = "some value"
-    assert @original.processors.find("image").settings != @original.processors.find("footnote").settings
+    assert_equal @original.processors.find("image").payload, @original.processors.find("footnote").payload
+    @original.processors.find("image").payload = { some_key: 'some value' }
+    assert @original.processors.find("image").payload != @original.processors.find("footnote").payload
+    assert_equal @original.processors.find("image").payload[:some_key], 'some value'
     @original.processors.update!("image")
-    assert_equal @original.processors.find("image").settings, @original.processors.find("footnote").settings
+    assert_equal @original.processors.find("image").payload, @original.processors.find("footnote").payload
   end
 
   def test_deletion_of_processors
