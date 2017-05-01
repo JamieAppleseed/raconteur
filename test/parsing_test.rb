@@ -22,6 +22,17 @@ class RaconteurParsingTest < Minitest::Test
     assert_equal output, "<div class=\"graphic\"><div class=\"visual\"><img src=\"https://maps.googleapis.com/maps/api/staticmap?center=55.672833,12.551455&zoom=15&markers=55.672833,12.551455&size=504x260&sensor=false\"></div><p class=\"caption\">Baymard's office in Copenhagen, Denmark</p></div>"
   end
 
+  def test_similarly_named_processors
+    @raconteur.processors.register!("company-name-with-apostrophe", {
+      template: 'Amazon\'s' })
+    @raconteur.processors.register!("company-name", {
+      template: 'Amazon' })
+    @raconteur.processors.register!("company-name-formal", {
+      template: 'Amazon.com, Inc' })
+    output = @raconteur.parse("{{ company-name }} is an online mass merchant. {{ company-name-with-apostrophe }} headquarters are located in Seattle, WA. Its full name of incorporation is {{ company-name-formal }}.")
+    assert_equal output, "Amazon is an online mass merchant. Amazon's headquarters are located in Seattle, WA. Its full name of incorporation is Amazon.com, Inc."
+  end
+
   def test_custom_quote_character
     @raconteur.processors.register!("definition", {
       template: '<span class="definition">{{ term }}<span class="icon">(?)</span> <span class="description">{{ text }}</span></span>'

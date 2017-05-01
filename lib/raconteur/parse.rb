@@ -73,6 +73,12 @@ class Raconteur::Parse
   # input: (string) 'id=353 + report-title="E-Commerce Checkout Usability Report"'
   # output: (hash) { id: '353', report_title: 'E-Commerce Checkout Usability Report' }
   def self.parse_settings(str)
+    # prepare a fresh hash for the parsed settings
+    parsed_settings = {}
+    # return empty hash if settings string is 'nil'
+    if str == nil
+      return parsed_settings
+    end
     # regex escape 'quote' character
     quote = Regexp.quote(@@raconteur.settings.setting_quotes)
     # Parsing logic:
@@ -83,8 +89,6 @@ class Raconteur::Parse
     #       b) a string wrapped by the 'quote' character at both ends
     # (instances of the 'quote' character within the string can be escaped by a backward-slash '\')
     regex = /([^\s#{quote}]+)\=(#{quote}.*?[^\\]#{quote}|[^\s]+)/mi
-    # prepare a fresh hash for the parsed settings
-    parsed_settings = {}
     # loop over all key-value setting pairs in the string
     str.scan(regex).each do |setting_str|
       # grap keys and turn them into underscored symbols

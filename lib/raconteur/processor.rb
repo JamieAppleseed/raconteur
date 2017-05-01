@@ -95,9 +95,9 @@ class Raconteur::Processor
 
   # regex for matching tag and its settings
   def regex
-    /^\s*#{Regexp.quote(@processor.tag)}:?(?<settings>.*?)?\s*$/im
+    /^\s*#{Regexp.quote(@processor.tag)}(:(?<settings>.*?))?\s*$/im
   end
-
+  
   # execute the processor
   def execute(content="", settings={})
     output = content
