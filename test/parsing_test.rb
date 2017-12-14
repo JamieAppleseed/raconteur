@@ -107,6 +107,27 @@ class RaconteurParsingTest < Minitest::Test
     assert_equal @raconteur.parse("Unwrapped line, on {{ page-count }}. {{% wrapper: page=143 %}} Wrapper lined, on {{ page-count }}. {{% wrapper: page=578 %}} Nested wrapped line, on {{ page-count }}. {{% end %}} Wrapper lined 1st level again, on {{ page-count }}. {{% end %}} Unwrapped again, on {{ page-count }}."), "Unwrapped line, on Page 32. <div class=\"wrapper\"> Wrapper lined, on Page 143. <div class=\"wrapper\"> Nested wrapped line, on Page 578. </div> Wrapper lined 1st level again, on Page 143. </div> Unwrapped again, on Page 32."
   end
 
+  def test_parser_context_passing
+    @raconteur.processors.register!("conditional-content", {
+      handler: lambda do |settings|
+        if settings.key?(:_scope_) && settings[:_scope_].key?(:context)
+          content_contexts = settings[:contexts].split(',')
+          parser_context = settings[:_scope_][:context].to_s
+          if content_contexts.include?(parser_context)
+            settings[:_yield_]
+          else
+            ''
+          end
+        end
+      end
+      })
+    markup = "This is always shown.{{% conditional-content: contexts=web,print %}}\n\nThis shows for web and print.{{% end %}}\n\nThis is once again always shown.{{% conditional-content: contexts=web %}}\n\nThis only shows for web.{{% end %}}{{% conditional-content: contexts=rss %}}\n\nThis only shows for RSS.{{% end %}}"
+    assert_equal @raconteur.parse(markup, { context: :web }), "This is always shown.\n\nThis shows for web and print.\n\nThis is once again always shown.\n\nThis only shows for web."
+    assert_equal @raconteur.parse(markup, { context: :print }), "This is always shown.\n\nThis shows for web and print.\n\nThis is once again always shown."
+    assert_equal @raconteur.parse(markup, { context: :rss }), "This is always shown.\n\nThis is once again always shown.\n\nThis only shows for RSS."
+    assert_equal @raconteur.parse(markup, { context: :email }), "This is always shown.\n\nThis is once again always shown."
+  end
+
   def test_alternate_closing_tag
     @raconteur.processors.register!("gallery", {
       template: "<div class=\"gallery\">{{ _yield_ }}</div>"
