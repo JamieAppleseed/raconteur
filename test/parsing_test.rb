@@ -121,8 +121,8 @@ class RaconteurParsingTest < Minitest::Test
         end
       end
       })
-    markup = "This is always shown.{{% conditional-content: contexts=web,print %}}\n\nThis shows for web and print.{{% end %}}\n\nThis is once again always shown.{{% conditional-content: contexts=web %}}\n\nThis only shows for web.{{% end %}}{{% conditional-content: contexts=rss %}}\n\nThis only shows for RSS.{{% end %}}"
-    assert_equal @raconteur.parse(markup, { context: :web }), "This is always shown.\n\nThis shows for web and print.\n\nThis is once again always shown.\n\nThis only shows for web."
+    markup = "This is always shown.{{% conditional-content: contexts=web,print %}}\n\nThis shows for web and print.{{% conditional-content: contexts=web %}}\n\nBut this nested part, only web.{{% end %}}{{% end %}}\n\nThis is once again always shown.{{% conditional-content: contexts=web %}}\n\nThis only shows for web.{{% end %}}{{% conditional-content: contexts=rss %}}\n\nThis only shows for RSS.{{% end %}}"
+    assert_equal @raconteur.parse(markup, { context: :web }), "This is always shown.\n\nThis shows for web and print.\n\nBut this nested part, only web.\n\nThis is once again always shown.\n\nThis only shows for web."
     assert_equal @raconteur.parse(markup, { context: :print }), "This is always shown.\n\nThis shows for web and print.\n\nThis is once again always shown."
     assert_equal @raconteur.parse(markup, { context: :rss }), "This is always shown.\n\nThis is once again always shown.\n\nThis only shows for RSS."
     assert_equal @raconteur.parse(markup, { context: :email }), "This is always shown.\n\nThis is once again always shown."
